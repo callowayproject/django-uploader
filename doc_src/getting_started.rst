@@ -1,0 +1,84 @@
+***************
+Getting Started
+***************
+
+Installation
+============
+
+1. Installation is easy using ``pip``.
+
+   .. code-block:: bash
+
+      pip install django-uploader
+
+2. Add ``uploader`` to your ``INSTALLED_APPS`` setting.
+3. Write one or more upload handlers.
+4. Go to /admin/uploader/upload/ to start uploading.
+
+
+Writing an upload handler
+=========================
+
+.. note:: An upload handler does not have to exist within the application for which it creates records. It must simply be within an application that is imported so the handler is discovered.
+
+An upload handler assigns one or more MIME types to a function. There should only be one handler for a given MIME type, although Uploader does allow some overlap using '\*'. For example, you can have one handler that handles ``image/tiff`` and another that handles ``image/*`` and yet another that handles ``*/*``\ . The ``image/tiff`` handler would get any ``.tiff`` images, the ``image/*`` would get any other type of image and the ``*/*`` handler would get any other type of file.
+
+To start, create a file named ``upload.py`` in your application. This file can contain several different handlers. When the Uploader application is first loaded, it attempts to import this file from every installed application.
+
+A basic handler looks like this:
+
+.. code-block:: python
+
+   from uploader.registration import upload_handlers
+
+   def photo_handler(obj):
+       """
+       Handle the creation of a SimpleModel record from an uploaded image.
+       """
+       from .models import SimpleModel
+
+       new_item = SimpleModel.objects.create(
+           name=obj.filename,
+           slug=obj.filename_slug,
+           description='',
+           file=obj.file_contents
+       )
+
+       return new_item
+   photo_handler.thumbnail_attribute = 'thumb'
+
+   upload_handlers.register(['image/jpeg', 'image/png'], photo_handler)
+
+
+Your upload handler will receive an :py:class:`Upload` Model object, and expects another Model in return. Uploader uses the object your handler returns to create a link back to it for the user interface.
+
+Adding a thumbnail
+==================
+
+The user interface can show a thumbnail of the uploaded file. Add a `thumbnail_attribute` attribute to the upload handler function specifying the attribute on the returned Model to retrieve the thumbnail.
+
+Registering the handler
+=======================
+
+The :py:func:`upload_handlers.register` expects a string or iterable as the first parameter and a callable as the second parameter.
+
+The first parameter specifies the MIME types your handler can receive. If you pass it a string::
+
+   upload_handlers.register('image/jpeg', jpeg_handler)
+
+Then any ``.jpeg`` file gets sent to your handler. If you want your handler to receive several different types, or there are a few different MIME types that cover the same type of file, you can pass an iterable (``tuple`` or ``list``\ ) of strings::
+
+   upload_handlers.register(['application/pdf', 'application/x-pdf'], pdf_handler)
+
+Globbing the MIME types
+-----------------------
+
+Uploader allows you to glob the MIME types. If you have an application that can handle any type of image file, you can register it with::
+
+   upload_handlers.register('image/*', image_handler)
+
+Globbed patterns are handled after specific patterns. So a handler for ``image/png`` supercedes a handler for ``image/*``\ .
+
+If you have a application that will store any type of file, you can use the "I'll take anything you give me pattern"::
+
+   upload_handlers.register('*/*', file_handler)

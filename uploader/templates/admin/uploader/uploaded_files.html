@@ -1,0 +1,79 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}uploader/css/jquery.fileupload-ui.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}uploader/css/fileicon.css">
+{% endblock extrastyle %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+&rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+&rsaquo; Previously Uploaded Files
+</div>
+{% endblock %}
+{% endif %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<script>window.jQuery = django.jQuery; window.$ = django.jQuery;</script>
+<div id="content-main">
+    <h1>Previously Uploaded Files</h1>
+    <!-- The file upload form used as target for the file upload widget -->
+    <table role="presentation" class="table table-striped">
+        <thead><tr><th style="width: 50px">File Type</th><th style="width: 100px">Preview</th><th>Name</th><th style="width: 70px">Size</th><th>Functions</th></thead>
+        <tbody class="files">
+            {% for f in files %}
+    <tr class="template-download">
+        <td style="vertical-align:middle;"><div class="file-icon file-icon-lg" data-type="{{ f.extension }}"></div>
+        </td>
+        <td>
+            <span class="preview">
+                {% if f.thumbnailUrl %}
+                    <a href="{{ f.url }}" title="{{ f.name }}"><img src="{{ f.thumbnailUrl }}"></a>
+                {% endif %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if not f.error and f.adminUrl %}
+                <a href="{{ f.adminUrl }}" title="{{ f.name }}" target="_blank">
+                {% endif %}
+                    {{ f.name }}
+                {% if not file.error and file.adminUrl %}
+                </a>
+                {% endif %}
+            </p>
+            {% if f.error %}
+                <div><span class="label label-important">{{ f.error }}</span> {{ f.error }}</div>
+            {% endif %}
+        </td>
+        <td>
+            <span class="size">{{ f.size|filesizeformat }}</span>
+        </td>
+        <td>
+            {% if not f.error and f.adminUrl %}
+            <a class="btn" href="{{ f.adminUrl }}" target="_blank">
+                <span>Edit</span>
+            </a>
+            {% endif %}
+        </td>
+    </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
+
+{% block footer %}
+{% if JQUERY_URL %}
+    <script src="{{ JQUERY_URL }}"></script>
+{% endif %}
+{{ block.super }}
+{% endblock footer %}
+

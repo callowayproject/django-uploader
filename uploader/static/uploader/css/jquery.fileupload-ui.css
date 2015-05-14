@@ -1,0 +1,207 @@
+@charset "UTF-8";
+/*
+ * jQuery File Upload UI Plugin CSS 8.8.1
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  font-size: 23px;
+  direction: ltr;
+  cursor: pointer;
+}
+.fileupload-buttonbar .btn,
+.fileupload-buttonbar .toggle {
+  margin-bottom: 5px;
+}
+.progress-animated .progress-bar,
+.progress-animated .bar {
+  background: url(../img/progressbar.gif) !important;
+  filter: none;
+}
+.fileupload-loading {
+  float: right;
+  width: 32px;
+  height: 32px;
+  background: url(../img/loading.gif) center no-repeat;
+  background-size: contain;
+  display: none;
+}
+.fileupload-processing .fileupload-loading {
+  display: block;
+}
+.files audio,
+.files video {
+  max-width: 300px;
+}
+#dropzone {
+  border: 3px dashed #d9d9d9;
+  border-radius: 10px;
+  padding: 2em 2em;
+  text-align: center;
+  text-align: center;
+  margin-bottom: 1em;
+}
+#dropzone.in, #dropzone.hover {
+  background: #F7F7F7;
+  box-shadow:inset 0 0 3px 3px #B8DBFF;
+}
+#dropzone.fade {
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+    opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .fileupload-buttonbar .toggle,
+  .files .toggle,
+  .files .btn span {
+    display: none;
+  }
+  .files .name {
+    width: 80px;
+    word-wrap: break-word;
+  }
+  .files audio,
+  .files video {
+    max-width: 80px;
+  }
+}
+
+.buttonbar {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* IE hacks */
+    zoom: 1;
+    *display: inline;
+}
+.buttonbar .button, .buttonbar button {
+    float: left;
+    /*margin-left: -1px;*/
+}
+
+button,
+a.btn, .btn:visited {
+    font: normal 12px Helvetica, Arial, sans-serif;
+    background: #f2f2f2;
+    background: -webkit-linear-gradient(top, #fff 0, #f2f2f2 100%);
+    background: -moz-linear-gradient(top, #fff 0, #f2f2f2 100%);
+    background: -ms-linear-gradient(top, #fff 0, #f2f2f2 100%);
+    background: -o-linear-gradient(top, #fff 0, #f2f2f2 100%);
+    background: linear-gradient(to bottom, #fff 0, #f2f2f2 100%);
+    border: 1px solid #ccc;
+    border-radius: 3.01px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    height: 2.1428571428571em;
+    line-height: 1.42857142857143;
+    margin: 0;
+    padding: 4px 10px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 white;
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+button > img,
+a.btn > img {
+  vertical-align: baseline;
+}
+a.btn:hover, a.btn:active, a.btn:focus {
+    text-decoration: none;
+}
+
+button:focus, button:hover,
+.btn:focus, .btn:hover {
+    background: #f7f7f7;
+    background: -webkit-linear-gradient(top, #fff 0, #f7f7f7 100%);
+    background: -moz-linear-gradient(top, #fff 0, #f7f7f7 100%);
+    background: -ms-linear-gradient(top, #fff 0, #f7f7f7 100%);
+    background: -o-linear-gradient(top, #fff 0, #f7f7f7 100%);
+    background: linear-gradient(to bottom, #fff 0, #f7f7f7 100%);
+    border-color: #999;
+    color: #000;
+    text-decoration: none;
+}
+
+button:active, .btn:active, .btn.active {
+    background-image: none;
+    background-color: #f2f2f2;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, .1);
+    text-shadow: none;
+    text-decoration: none;
+}
+
+
+.buttonbar > .button:not(:first-child):not(:last-child),
+.buttonbar li:not(:first-child):not(:last-child) .button,
+.buttonbar > button:not(:first-child):not(:last-child) {
+    border-radius: 0;
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+}
+.buttonbar > .button:not(:first-child):not(:last-child):hover,
+.buttonbar li:not(:first-child):not(:last-child) .button:hover,
+.buttonbar > button:not(:first-child):not(:last-child):hover {
+    border-right: 1px solid #999;
+    border-left: 1px solid #999;
+}
+
+.buttonbar > .button:first-child,
+.buttonbar > button:first-child,
+.buttonbar li:first-child .button {
+    margin-left: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.buttonbar > .button:last-child,
+.buttonbar > button:last-child,
+.buttonbar li:last-child .button {
+    margin-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+table th,
+table td {
+    padding: 8px 8px;
+    border-bottom: 1px solid #ddd;
+}
+table th {
+    border-bottom: 2px solid #ddd;
+}
+table th { text-align: left; }
+table td { vertical-align: top; }
+
+table thead th {
+  vertical-align: bottom;
+  background: none;
+border-left: 0;}
+.table-striped tbody tr:nth-of-type(odd) { background: #fafafa; }

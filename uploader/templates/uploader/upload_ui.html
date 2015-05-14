@@ -1,0 +1,126 @@
+<div id="dropzone" class="fade well">
+    Drop files here or<br />
+    <!-- The fileinput-button span is used to style the file input field as button -->
+    <a class="btn fileinput-button">
+        <img width="10" height="10" title="" alt="" src="data:image/gif;base64,R0lGODlhCgAKAPMJAHvPd2S2YWW1YWS2YGW2YW2/aV+vW3XIckWUQf///wAAAAAAAAAAAAAAAAAAAAAAACH5BAUAAAkALAAAAAAKAAoAQAQjMElEkbwJGWMn+MBRENyFfF1WFUGVnsBboS4oCts7lJhKXREAOw==" />
+        Add files&hellip;
+        {{ form.uploaded_file }}
+    </a>
+</div>
+<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+{% comment %}
+<div style="text-align:center">
+    <div class="buttonbar">
+        <button type="submit" class="left">
+            <img width="10" height="10" title="Start Upload" alt="Start Upload" src="data:image/gif;base64,R0lGODlhCgAKAPIGAEWUQV+vW2W2YW2/aXXIcnvPdwAAAAAAACH/C0lDQ1JHQkcxMDEySAAADEhMaW5vAhAAAG1udHJSR0IgWFlaIAfOAAIACQAGADEAAGFjc3BNU0ZUAAAAAElFQyBzUkdCAAAAAAAAAAAAAAAAAAD21gAh+QQFCgAGACwAAAAACgAKAAADIGi6zABNgVKgo4VYMykZAtRlYBA8KIhugHBGgLkt65IAADs=" />
+            Start upload
+        </button>
+        <button type="reset" class="middle">
+            <img width="10" height="10" title="Cancel" alt="Cancel" src="data:image/gif;base64,R0lGODlhCgAKAMQCAN4hIf/+/v///+EzM+AuLvGkpORISPW+vudgYOhiYvKpqeZYWPbAwOdaWup1dfOurvW7u++Rkepycu6PjwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAIALAAAAAAKAAoAAAUtoCAcyEA0jyhEQOs6AuPOQJHQrjEAQe+3O98PcMMBDAdjTTDBSVSQEmGhEIUAADs=" />
+            Cancel upload
+        </button>
+        <button type="button" class="right">
+            <img width="10" height="10" title="Delete" alt="Delete" src="data:image/gif;base64,R0lGODlhCgAKAPQXAOBOTu5mZuBOT+peX9tGRulfXulfX9M3N+leX+BPTtc+PswrKvRycuVWVvRyc88wMNI3N/FtbMsrKvd2duVXV+VWV6IZGf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUAABcALAAAAAAKAAoAQAUx4HVZokiawGkt5xgYVGpOk2NZQyVbRSMQCohqoiqoGJEAItaywH6qXOJ2eEhUpZEoBAA7" />
+            Delete
+        </button>
+    </div>
+        <input type="checkbox" class="toggle" name="toggleBtn" id="toggleBtn"> <label for="toggleBtn"> All</label>
+        <!-- The loading indicator is shown during file processing -->
+        <span class="fileupload-loading"></span>
+    <!-- The global progress information -->
+    <div class="col-lg-5 fileupload-progress fade">
+        <!-- The global progress bar -->
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+        </div>
+        <!-- The extended global progress information -->
+        <div class="progress-extended">&nbsp;</div>
+    </div>
+</div>
+{% endcomment %}
+<!-- The table listing the files available for upload/download -->
+<table role="presentation" class="table table-striped">
+    <thead><tr><th style="width: 50px">File Type</th><th style="width: 100px">Preview</th><th>Name</th><th style="width: 70px">Size</th><th>Functions</th></thead>
+    <tbody class="files"></tbody>
+</table>
+
+{% verbatim %}
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td style="vertical-align:middle;"><div class="file-icon file-icon-lg" data-type="{%=file.name.split(".").reverse()[0]%}"></div>
+        </td>
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            {% if (file.error) { %}
+                <div><span class="label label-important">{%=locale.fileupload.error%}</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <p class="size">{%=o.formatFileSize(file.size)%}</p>
+            {% if (!o.files.error) { %}
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+            {% } %}
+        </td>
+        <td>
+            {% if (!o.files.error && !i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start">
+                    <img width="10" height="10" title="Start Upload" alt="Start Upload" src="data:image/gif;base64,R0lGODlhCgAKAPIGAEWUQV+vW2W2YW2/aXXIcnvPdwAAAAAAACH/C0lDQ1JHQkcxMDEySAAADEhMaW5vAhAAAG1udHJSR0IgWFlaIAfOAAIACQAGADEAAGFjc3BNU0ZUAAAAAElFQyBzUkdCAAAAAAAAAAAAAAAAAAD21gAh+QQFCgAGACwAAAAACgAKAAADIGi6zABNgVKgo4VYMykZAtRlYBA8KIhugHBGgLkt65IAADs=" />
+                    {%=locale.fileupload.start%}
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <img width="10" height="10" title="Cancel" alt="Cancel" src="data:image/gif;base64,R0lGODlhCgAKAMQCAN4hIf/+/v///+EzM+AuLvGkpORISPW+vudgYOhiYvKpqeZYWPbAwOdaWup1dfOurvW7u++Rkepycu6PjwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAIALAAAAAAKAAoAAAUtoCAcyEA0jyhEQOs6AuPOQJHQrjEAQe+3O98PcMMBDAdjTTDBSVSQEmGhEIUAADs=" />
+                    {%=locale.fileupload.cancel%}
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td style="vertical-align:middle;"><div class="file-icon file-icon-lg" data-type="{%=file.name.split(".").reverse()[0]%}"></div>
+        </td>
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}"><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (!file.error && file.adminUrl) { %}
+                <a href="{%=file.adminUrl%}" title="{%=file.name%}" target="_blank">
+                {% } %}
+                    {%=file.name%}
+                {% if (!file.error && file.adminUrl) { %}
+                </a>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-important">{%=locale.fileupload.error%}</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (!file.error && file.adminUrl) { %}
+            <button class="btn" data-url="{%=file.adminUrl%}">
+                <span>Edit</span>
+            </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+{% endverbatim %}

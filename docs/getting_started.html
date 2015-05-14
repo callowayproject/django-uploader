@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; django-uploader 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-uploader 0.1 documentation" href="index.html" />
+    <link rel="next" title="Models" href="models.html" />
+    <link rel="prev" title="django-uploader v 0.1" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="models.html" title="Models"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="django-uploader v 0.1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">django-uploader 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Installation is easy using <code class="docutils literal"><span class="pre">pip</span></code>.</p>
+<div class="highlight-bash"><div class="highlight"><pre>pip install django-uploader
+</pre></div>
+</div>
+</li>
+<li><p class="first">Add <code class="docutils literal"><span class="pre">uploader</span></code> to your <code class="docutils literal"><span class="pre">INSTALLED_APPS</span></code> setting.</p>
+</li>
+<li><p class="first">Write one or more upload handlers.</p>
+</li>
+<li><p class="first">Go to /admin/uploader/upload/ to start uploading.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="writing-an-upload-handler">
+<h2>Writing an upload handler<a class="headerlink" href="#writing-an-upload-handler" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">An upload handler does not have to exist within the application for which it creates records. It must simply be within an application that is imported so the handler can be discovered.</p>
+</div>
+<p>An upload handler assigns one or more MIME types to a function. There should only be one handler for a given MIME type, although Uploader does allow some overlap using &#8216;*&#8217;. For example, you can have one handler that handles <code class="docutils literal"><span class="pre">image/tiff</span></code> and another that handles <code class="docutils literal"><span class="pre">image/*</span></code> and yet another that handles <code class="docutils literal"><span class="pre">*/*</span></code>. The <code class="docutils literal"><span class="pre">image/tiff</span></code> handler would get any <code class="docutils literal"><span class="pre">.tiff</span></code> images, the <code class="docutils literal"><span class="pre">image/*</span></code> would get any other type of image and the <code class="docutils literal"><span class="pre">*/*</span></code> handler would get any other type of file.</p>
+<p>To start, create a file named <code class="docutils literal"><span class="pre">upload.py</span></code> in your application. This file can contain several different handlers. When the Uploader application is first loaded, it attempts to import this file from every installed application.</p>
+<p>A basic handler looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">uploader.registration</span> <span class="kn">import</span> <span class="n">upload_handlers</span>
+
+<span class="k">def</span> <span class="nf">photo_handler</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle the creation of a SimpleModel record from an uploaded image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">SimpleModel</span>
+
+    <span class="n">new_item</span> <span class="o">=</span> <span class="n">SimpleModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+        <span class="n">slug</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">filename_slug</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+        <span class="nb">file</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">file_contents</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_item</span>
+<span class="n">photo_handler</span><span class="o">.</span><span class="n">thumbnail_attribute</span> <span class="o">=</span> <span class="s">&#39;thumb&#39;</span>
+
+<span class="n">upload_handlers</span><span class="o">.</span><span class="n">register</span><span class="p">([</span><span class="s">&#39;image/jpeg&#39;</span><span class="p">,</span> <span class="s">&#39;image/png&#39;</span><span class="p">],</span> <span class="n">photo_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Your upload handler will receive an <code class="xref py py-class docutils literal"><span class="pre">Upload</span></code> Model object, and expects another Model in return. Uploader uses the object your handler returns to create a link back to it for the user interface.</p>
+</div>
+<div class="section" id="adding-a-thumbnail">
+<h2>Adding a thumbnail<a class="headerlink" href="#adding-a-thumbnail" title="Permalink to this headline">¶</a></h2>
+<p>The user interface can show a thumbnail of the uploaded file. Add a <cite>thumbnail_attribute</cite> attribute to the upload handler function specifying the attribute on the returned Model to retrieve the thumbnail.</p>
+</div>
+<div class="section" id="registering-the-handler">
+<h2>Registering the handler<a class="headerlink" href="#registering-the-handler" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-func docutils literal"><span class="pre">upload_handlers.register()</span></code> expects a string or iterable as the first parameter and a callable as the second parameter.</p>
+<p>The first parameter specifies the MIME types your handler can receive. If you pass it a string:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">upload_handlers</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">&#39;image/jpeg&#39;</span><span class="p">,</span> <span class="n">jpeg_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then any <code class="docutils literal"><span class="pre">.jpeg</span></code> file gets sent to your handler. If you want your handler to receive several different types, or there are a few different MIME types that cover the same type of file, you can pass an iterable (<code class="docutils literal"><span class="pre">tuple</span></code> or <code class="docutils literal"><span class="pre">list</span></code>) of strings:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">upload_handlers</span><span class="o">.</span><span class="n">register</span><span class="p">([</span><span class="s">&#39;application/pdf&#39;</span><span class="p">,</span> <span class="s">&#39;application/x-pdf&#39;</span><span class="p">],</span> <span class="n">pdf_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="globbing-the-mime-types">
+<h3>Globbing the MIME types<a class="headerlink" href="#globbing-the-mime-types" title="Permalink to this headline">¶</a></h3>
+<p>Uploader allows you to glob the MIME types. If you have an application that can handle any type of image file, you can register it with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">upload_handlers</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">&#39;image/*&#39;</span><span class="p">,</span> <span class="n">image_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Globbed patterns are handled after specific patterns. So a handler for <code class="docutils literal"><span class="pre">image/png</span></code> supercedes a handler for <code class="docutils literal"><span class="pre">image/*</span></code>.</p>
+<p>If you have a application that will store any type of file, you can use the &#8220;I&#8217;ll take anything you give me pattern&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">upload_handlers</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s">&#39;*/*&#39;</span><span class="p">,</span> <span class="n">file_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#writing-an-upload-handler">Writing an upload handler</a></li>
+<li><a class="reference internal" href="#adding-a-thumbnail">Adding a thumbnail</a></li>
+<li><a class="reference internal" href="#registering-the-handler">Registering the handler</a><ul>
+<li><a class="reference internal" href="#globbing-the-mime-types">Globbing the MIME types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">django-uploader v 0.1</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="models.html"
+                        title="next chapter">Models</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Corey Oordt.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.4</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

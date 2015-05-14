@@ -1,0 +1,20 @@
+{% extends "uploader/upload_base.html" %}
+
+{% block css %}
+    {{ form.media.css }}
+{% endblock css %}
+
+{% block content %}
+    <h1>Upload Files</h1>
+    <!-- The file upload form used as target for the file upload widget -->
+    <form id="fileupload" method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include "uploader/upload_ui.html" %}
+    </form>
+{% endblock %}
+
+{% block bodyjs %}
+{{ form.media.js }}
+{% include "uploader/basicplus_script.html" %}
+{% endblock bodyjs %}
+

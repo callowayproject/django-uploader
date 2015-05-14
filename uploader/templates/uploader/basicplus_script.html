@@ -1,0 +1,78 @@
+<script>
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$('#dropzone').bind('dragover', function (e) {
+    var dropZone = $('#dropzone'),
+        timeout = window.dropZoneTimeout;
+    if (!timeout) {
+        dropZone.addClass('in');
+    } else {
+        clearTimeout(timeout);
+    }
+    var found = false,
+        node = e.target;
+    do {
+        if (node === dropZone[0]) {
+            found = true;
+            break;
+        }
+        node = node.parentNode;
+    } while (node != null);
+    if (found) {
+        dropZone.addClass('hover');
+    } else {
+        dropZone.removeClass('hover');
+    }
+    window.dropZoneTimeout = setTimeout(function () {
+        window.dropZoneTimeout = null;
+        dropZone.removeClass('in hover');
+    }, 100);
+});
+$(document).bind('drop dragover', function (e) {
+    if (e.preventDefault) e.preventDefault();
+    return false;
+});
+
+$(function () {
+    'use strict';
+    var url = '{% url "upload-new" %}',
+        uploadButton = $('<button/>')
+        .addClass('btn')
+        .prop('disabled', true)
+        .text('Processing&hellip;')
+        .on('click', function () {
+            var $this = $(this),
+                data = $this.data();
+            $this
+                .off('click')
+                .text('Abort')
+                .on('click', function () {
+                    $this.remove();
+                    data.abort();
+                });
+            data.submit().always(function () {
+                $this.remove();
+            });
+        });
+
+    var options = {
+        url: url,
+        crossDomain: false,
+        dropZone: $('#dropzone'),
+        dataType: 'json',
+        autoUpload: true,
+        maxFileSize: 10000000, // 10 MB
+        disableImageResize: true,
+        previewMaxWidth: 100,
+        previewMaxHeight: 100,
+        imageMaxWidth: 10000,
+        prependFiles: true,
+        imageMaxHeight: 10000,
+        previewCrop: true
+    }
+    $('#fileupload').fileupload(options);
+});
+</script>

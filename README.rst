@@ -35,10 +35,7 @@ An upload handler assigns one or more MIME types to a function. There should onl
 
 To start, create a file named ``upload.py`` in your application. This file can contain several different handlers. When the Uploader application is first loaded, it attempts to import this file from every installed application.
 
-A basic handler looks like this:
-
-.. code-block:: python
-   :linenos:
+A basic handler looks like this::
 
    from uploader.registration import upload_handlers
 
@@ -59,6 +56,4 @@ A basic handler looks like this:
    photo_handler.thumbnail_attribute = 'thumb'
 
    upload_handlers.register(['image/jpeg', 'image/png'], photo_handler)
-
-
 

@@ -24,4 +24,10 @@ def get_version(short=False):
 
 __version__ = get_version()
 
-from registration import autodiscover  # NOQA
+default_app_config = 'uploader.apps.UploaderConfig'
+
+try:
+    from registration import autodiscover
+    autodiscover()
+except:
+    pass

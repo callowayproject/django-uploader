@@ -19,6 +19,23 @@ class UploadHandlerList(object):
         for mtype in mimetype:
             self._registry[mtype] = func
 
+    @property
+    def acceptable_types(self):
+        """
+        Return the types acceptable for upload
+        """
+        from collections import defaultdict
+        acceptable = defaultdict(list)
+        if '*/*' in self._registry.keys():
+            return {'All types': ['All']}
+        for mtype in self._registry.keys():
+            primary, secondary = mtype.split("/")
+            if secondary == '*':
+                acceptable[primary] = ['All']
+            else:
+                acceptable[primary].append(secondary)
+        return acceptable
+
     def get_handler(self, mimetype):
         """
         Get the correct handler, allowing registered handlers to use:

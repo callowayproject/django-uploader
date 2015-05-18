@@ -15,15 +15,17 @@ Django Uploader uses `jQuery file upload`_ to allow drag-and-drop file upload of
 Installation
 ============
 
-1. Installation is easy using ``pip``.
+1. Installation is easy using ``pip``::
 
-   .. code-block:: bash
-
-      pip install django-uploader
+   pip install django-uploader
 
 2. Add ``uploader`` to your ``INSTALLED_APPS`` setting.
-3. Write one or more upload handlers.
-4. Go to /admin/uploader/upload/ to start uploading.
+3. Add the uploader's urls::
+
+   url(r'^upload/', include('uploader.urls')),
+
+4. Write one or more upload handlers.
+5. Go to /admin/uploader/upload/ to start uploading.
 
 
 Writing an upload handler

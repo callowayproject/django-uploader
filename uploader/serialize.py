@@ -41,7 +41,11 @@ def serialize(instance, file_attr='uploaded_file'):
         model_name = getattr(opts, 'module_name', None) or getattr(opts, 'model_name', None)
         out['name'] = "%s %s: %s" % (app_label, model_name, unicode(instance.related_object))
         if instance.thumbnail_attr:
-            out['thumbnailUrl'] = getattr(instance.related_object, instance.thumbnail_attr).url
+            url = getattr(instance.related_object, instance.thumbnail_attr)
+            if callable(url):
+                out['thumbnailUrl'] = url()
+            else:
+                out['thumbnailUrl'] = url.url
     else:
         out['name'] = "No handler for this type"
         out['error'] = "No handler for this type"

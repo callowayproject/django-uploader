@@ -27,11 +27,16 @@ class UploadCreateView(CreateView):
             model_name = getattr(new_obj._meta, 'model_name', None) or getattr(new_obj._meta, 'module_name', None)
             self.object.admin_url = reverse("admin:%s_%s_change" % (app_label, model_name), args=[new_obj.pk])
             self.object.related_object = new_obj
-            thumb_attr = getattr(upload_handlers._registry[mtype], 'thumbnail_attribute', None)
+            thumb_attr = getattr(upload_handlers.get_handler(mtype), 'thumbnail_attribute', None)
             self.object.thumbnail_attr = thumb_attr
             self.object.save()
+            print self.object.id
             if thumb_attr is not None and new_obj is not None:
-                self.object.thumbnail = getattr(new_obj, thumb_attr).url
+                url = getattr(new_obj, thumb_attr)
+                if callable(url):
+                    self.object.thumbnail = url()
+                else:
+                    self.object.thumbnail = url.url
             else:
                 self.object.thumbnail = '%suploader/img/missing-image.svg' % settings.STATIC_URL
 

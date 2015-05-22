@@ -30,7 +30,6 @@ class UploadCreateView(CreateView):
             thumb_attr = getattr(upload_handlers.get_handler(mtype), 'thumbnail_attribute', None)
             self.object.thumbnail_attr = thumb_attr
             self.object.save()
-            print self.object.id
             if thumb_attr is not None and new_obj is not None:
                 url = getattr(new_obj, thumb_attr)
                 if callable(url):

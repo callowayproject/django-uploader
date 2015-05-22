@@ -38,7 +38,7 @@ class Upload(models.Model):
     @property
     def filename(self):
         import os
-        return os.path.basename(self.uploaded_file.name)
+        return os.path.basename(self.uploaded_file.name.encode('utf8')).decode('utf8')
 
     @property
     def filename_slug(self):

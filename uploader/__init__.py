@@ -3,10 +3,11 @@
 Django Uploader uses jQuery file upload to allow drag-and-drop file upload of
 any file type in the Django Admin.
 """
+
 __version_info__ = {
     'major': 0,
     'minor': 2,
-    'micro': 2,
+    'micro': 3,
     'releaselevel': 'final',
     'serial': 1
 }

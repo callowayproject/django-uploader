@@ -7,7 +7,7 @@ any file type in the Django Admin.
 __version_info__ = {
     'major': 0,
     'minor': 2,
-    'micro': 3,
+    'micro': 4,
     'releaselevel': 'final',
     'serial': 1
 }

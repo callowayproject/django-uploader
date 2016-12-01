@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.contrib import admin
 
 from .models import Upload
@@ -21,12 +22,10 @@ class UploadAdmin(admin.ModelAdmin):
         return UploadListView.as_view()(request, extra_context=super_resp.context_data)
 
     def get_urls(self):
-        from django.conf.urls import patterns
-
         urls = super(UploadAdmin, self).get_urls()
-        my_urls = patterns('',
-            (r'^uploaded_files/$', self.list_view)
-        )
+        my_urls = [
+            url(r'^uploaded_files/$', self.list_view)
+            ]
         return my_urls + urls
 
 admin.site.register(Upload, UploadAdmin)

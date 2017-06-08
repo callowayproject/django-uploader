@@ -26,7 +26,7 @@
     <h1>Previously Uploaded Files</h1>
     <!-- The file upload form used as target for the file upload widget -->
     <table role="presentation" class="table table-striped">
-        <thead><tr><th style="width: 50px">File Type</th><th style="width: 100px">Preview</th><th>Name</th><th style="width: 70px">Size</th><th>Functions</th></thead>
+        <thead><tr><th style="width: 50px">File Type</th><th style="width: 100px">Preview</th><th>Name</th><th>Functions</th></thead>
         <tbody class="files">
             {% for f in files %}
     <tr class="template-download">
@@ -52,9 +52,6 @@
             {% if f.error %}
                 <div><span class="label label-important">{{ f.error }}</span> {{ f.error }}</div>
             {% endif %}
-        </td>
-        <td>
-            <span class="size">{{ f.size|filesizeformat }}</span>
         </td>
         <td>
             {% if not f.error and f.adminUrl %}

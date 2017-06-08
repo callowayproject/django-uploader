@@ -26,16 +26,15 @@ def serialize(instance, file_attr='uploaded_file'):
 
     """
     obj = getattr(instance, file_attr)
-    mimetype = mimetypes.guess_type(obj.path)[0] or 'image/png'
+    mimetype = mimetypes.guess_type(obj.name)[0] or 'image/png'
 
     out = {
         'url': instance.admin_url,
         'type': mimetype,
         'extension': mimetype.split("/")[1],
-        'size': obj.size,
         'adminUrl': instance.admin_url,
     }
-    if hasattr(instance, 'related_object'):
+    if hasattr(instance, 'related_object') and instance.related_object:
         opts = instance.related_object._meta
         app_label = opts.app_label
         model_name = getattr(opts, 'module_name', None) or getattr(opts, 'model_name', None)
